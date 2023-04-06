@@ -1,0 +1,13 @@
+#!/bin/csh -f
+
+module rm verdi
+module rm vcs
+module rm syn
+
+
+module load verdi/2022.06-1
+module load vcs/2022.06-1
+module load syn/2022.03
+
+#
+exit 0

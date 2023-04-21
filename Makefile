@@ -45,6 +45,8 @@ vcs_faultsim_test%:
 	cp ${WORK_AREA}/fault_cmd/test$*_fault.cmd . && \
 	simv  -l simulation_test1.log +test$* -ucli -do test$*_fault.cmd
 
+hello:
+	@echo "hello"
 
 ###############################
 # syn

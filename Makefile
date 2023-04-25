@@ -38,7 +38,7 @@ vcs_comp: clean
 
 vcs_sim_test%:
 	cd ${WORK_AREA}/${SIM_PATH} && \
-	simv  -l simulation_test1.log +test$* 
+	./simv  -l simulation_test1.log +test$* 
 
 vcs_faultsim_test%:
 	cd ${WORK_AREA}/${SIM_PATH} && \

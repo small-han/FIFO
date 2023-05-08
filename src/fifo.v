@@ -20,11 +20,13 @@ module FIFO #( parameter FIFO_DEPTH = 4, parameter DATA_WIDTH = 8 )
     output [DATA_WIDTH-1:0] DataOut,
     output                  Empty_,
     output                  HalfFull_,
-    output                  Full_
+    output                  Full_,
+    output                  Error_
   ); 
 
 
   parameter ADDR_WIDTH = $clog2(FIFO_DEPTH);
+  parameter ECC_WIDTH = 7;
 
   wire [ADDR_WIDTH-1:0] ReadPtr;
   wire [ADDR_WIDTH-1:0] WritePtr;
@@ -43,8 +45,7 @@ module FIFO #( parameter FIFO_DEPTH = 4, parameter DATA_WIDTH = 8 )
   COUNTER #(.ADDR_WIDTH(ADDR_WIDTH)) WP_IF ( Reset_, DoWrite, WriteClk, WritePtr );
 
 
-
-
+  wire [DATA_WIDTH-1:0] ncorr_data;
   SDPRAM_TOP #( .ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH)) sdpram_i1
   ( 
     // Left port
@@ -58,11 +59,38 @@ module FIFO #( parameter FIFO_DEPTH = 4, parameter DATA_WIDTH = 8 )
     .R_Clock(ReadClk)                 , // Clock
     .R_Address(ReadPtr)               , // address bus
     .R_DataIn({DATA_WIDTH {1'b0}})    , // data input bus
-    .R_DataOut(DataOut)               , // data output bus
+    .R_DataOut(ncorr_data)               , // data output bus
     .R_ReadEn(DoRead)                 , // Active high read  enable
     .R_WriteEn(1'b0)
   ) ;
 
+  wire [ECC_WIDTH-1:0] corr_data_in;
+  wire [ECC_WIDTH-1:0] corr_data_out;
+  wire [DATA_WIDTH-1:0] correct_data;
+
+  ENCODE #(.ECC_WIDTH(ECC_WIDTH),.DATA_WIDTH(DATA_WIDTH))encode
+  (DataIn,corr_data_in);
+  
+  DECODE #(.ECC_WIDTH(ECC_WIDTH),.DATA_WIDTH(DATA_WIDTH))decode
+  (ncorr_data,corr_data_out,DataOut,Error_);
+
+  SDPRAM_TOP #( .ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(ECC_WIDTH)) sdpram_i2
+  ( 
+    // Left port  
+    .L_Clock(WriteClk)                ,
+    .L_Address(WritePtr)              , // address bus
+    .L_DataIn(corr_data_in)                 , // data input bus
+    .L_DataOut()                      , // data output bus
+    .L_ReadEn(1'b0)                   , // Active high read  enable
+    .L_WriteEn(DoWrite)               , // Active high write enable
+    // Right port
+    .R_Clock(ReadClk)                 , // Clock
+    .R_Address(ReadPtr)               , // address bus
+    .R_DataIn({ECC_WIDTH {1'b0}})    , // data input bus
+    .R_DataOut(corr_data_out)               , // data output bus
+    .R_ReadEn(DoRead)                 , // Active high read  enable
+    .R_WriteEn(1'b0)
+  ) ;
 endmodule
 
 module FLAGS ( Reset_, Clock, Read, Write, Empty_, HalfFull_, Full_ );

@@ -8,8 +8,10 @@ export TEST_PATH=${WORK_ARE}/testcases
 ###############################
 
 # End-2-End FMEDA flow with local FDB
-all: vcs_comp vcs_sim_test1 vcs_sim_test2 vcs_sim_test3 vcs_faultsim_test1 vcs_faultsim_test2 vcs_faultsim_test3 
+# all: vcs_comp vcs_sim_test1 vcs_sim_test2 vcs_sim_test3 vcs_faultsim_test1 vcs_faultsim_test2 vcs_faultsim_test3 
 #all: vcs_comp vcs_sim_test1 vcs_sim_test2 vcs_sim_test3 vcs_faultsim_test1 vcs_faultsim_test2 vcs_faultsim_test3 dc_syn
+
+all:vcs_comp vcs_faultsim_test1 run_verdi
 
 ###############################
 # HELP and utils
@@ -43,11 +45,14 @@ vcs_sim_test%:
 vcs_faultsim_test%:
 	cd ${WORK_AREA}/${SIM_PATH} && \
 	cp ${WORK_AREA}/fault_cmd/test$*_fault.cmd . && \
-	simv  -l simulation_test1.log +test$* -ucli -do test$*_fault.cmd
+	./simv  -l simulation_test1.log +test$* -ucli -do test$*_fault.cmd
 
 hello:
 	@echo "hello"
 
+py:
+	cd ./python &&\
+	python test.py
 ###############################
 # syn
 ###############################	

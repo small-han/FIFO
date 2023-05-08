@@ -6,7 +6,7 @@ module FIFO_SM #( parameter OBSERVE_WIDTH = 8 )
     output detected_error
 );
 
-  assign detected_error = 1'b0;
+  assign detected_error = 0;
 
 endmodule
 

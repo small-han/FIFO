@@ -33,15 +33,17 @@ module test;
     .DataOut(DataOut),
     .Empty_(FifoEmpty),
     .HalfFull_(FifoHalfFull),
-    .Full_(FifoFull)
+    .Full_(FifoFull),
+    .Error_(Error)
   );
 
+  wire sm_error;
   FIFO_SM #(.OBSERVE_WIDTH(8)) DUT_SM
   (
     .Reset_(Reset_),
     .Clock(Clock),
     .observe_signals(8'h0),  // input the signals you need to observe
-    .detected_error(Error)   // output Error signal when SM detect a fault
+    .detected_error(sm_error)   // output Error signal when SM detect a fault
   );
 
   integer i;
@@ -74,7 +76,7 @@ module test;
 
 initial begin
       $fsdbDumpfile("fifo.fsdb");
-      $fsdbDumpvars(0,test.DUT);
+      $fsdbDumpvars(0,test);
 end
 
 

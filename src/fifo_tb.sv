@@ -16,6 +16,7 @@ module test;
   wire                  FifoHalfFull;
   wire                  FifoFull;
   wire                  Error;
+   wire                  Error_full;
 
   int                   golden_data[$];
   int                   temp_data;

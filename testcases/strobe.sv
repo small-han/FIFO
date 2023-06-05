@@ -44,6 +44,10 @@
     input HalfFull;
     input Full;
     begin
+      // if (Error == 1'b1)
+      //  begin
+      //     if (FifoEmpty !== Empty)
+
       if (FifoEmpty !== Empty)
         begin
           if (Error == 1'b1)
@@ -51,17 +55,26 @@
           else
             $display($time,": FAIL: wrong 'Empty' flag value, got %h, was expecting %h\n", FifoEmpty, Empty);
         end
+      //  if (Error == 1'b1)     
+      //   begin
+      //      if (FifoHalfFull !== HalfFull)
+
+
       if (FifoHalfFull !== HalfFull)
         begin
           if (Error == 1'b1)
-            $display($time,": DD: 'HalfFull' flag value detected, got %h, was expecting %h\n", FifoEmpty, Empty);
+            $display($time,": DD: 'HalfFull' flag value detected, got %h, was expecting %h\n", FifoHalfFull, HalfFull);
           else
             $display($time,": FAIL: wrong 'HalfFull' flag value, got %h, was expecting %h\n", FifoHalfFull, HalfFull);
         end
+     //  if (Error == 1'b1)
+     //     begin
+     //      if (FifoFull !== Full)
+
       if (FifoFull !== Full)
         begin
           if (Error == 1'b1)
-            $display($time,": DD: 'Full' flag value detected, got %h, was expecting %h\n", FifoEmpty, Empty);
+            $display($time,": DD: 'Full' flag value detected, got %h, was expecting %h\n", FifoFull, Full);
           else
             $display($time,": FAIL: wrong 'Full' flag value, got %h, was expecting %h\n", FifoFull, Full);
         end

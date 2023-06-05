@@ -46,7 +46,7 @@
       repeat(FIFO_DEPTH/2)
         begin
           FifoTransfer(.Write(1'b0), .WData(8'hx), .Read(1'b1));
-          //CheckFlags(.Empty(1'b1), .HalfFull(1'b1), .Full(1'b1));
+         // CheckFlags(.Empty(1'b1), .HalfFull(1'b1), .Full(1'b1));       /////////////////////////////////////////////////////
         end
 
       // Empty flag check
